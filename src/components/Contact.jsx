@@ -6,27 +6,35 @@ const FORMSPREE_FORM_ID = import.meta.env.VITE_FORMSPREE_FORM_ID || 'mojwwjwj'
 function Contact() {
   const [status, setStatus] = useState('') // 'sending' | 'success' | 'error'
   const [formData, setFormData] = useState({ name: '', email: '', message: '' })
+  const [formError, setFormError] = useState(null) // Formspree error message
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setStatus('sending')
+    setFormError(null)
     const fd = new FormData()
     fd.append('name', formData.name)
     fd.append('email', formData.email)
+    fd.append('_replyto', formData.email) // Formspree: sets Reply-To in your email
     fd.append('message', formData.message)
     try {
       const res = await fetch(`https://formspree.io/f/${FORMSPREE_FORM_ID}`, {
         method: 'POST',
         body: fd,
+        headers: { Accept: 'application/json' },
       })
+      const data = await res.json().catch(() => ({}))
       if (res.ok) {
         setStatus('success')
         setFormData({ name: '', email: '', message: '' })
       } else {
+        // Show Formspree error if available (e.g. "Form not found", "Please confirm your email")
         setStatus('error')
+        setFormError(data.error || data.message || null)
       }
     } catch {
       setStatus('error')
+      setFormError(null)
     }
   }
 
@@ -87,7 +95,11 @@ function Contact() {
               <p className="form-status form-status-success">Thanks! I'll get back to you soon.</p>
             )}
             {status === 'error' && (
-              <p className="form-status form-status-error">Something went wrong. Try again or email rAngelobardoquillo@gmail.com</p>
+              <div className="form-status form-status-error">
+                <p>Something went wrong. Try again or email rAngelobardoquillo@gmail.com</p>
+                {formError && <p className="form-error-detail">{formError}</p>}
+                <p className="form-error-hint">Check formspree.io: confirm your email and that form ID is <strong>mojwwjwj</strong>.</p>
+              </div>
             )}
           </form>
           <div className="contact-links">
