@@ -55,6 +55,39 @@ npm run preview
 
 - Modify colors in `src/index.css` by changing the CSS variables in `:root`
 
+## Deployment
+
+### Deploy to Vercel
+
+1. **Push your code to GitHub** (if you haven't already):
+   ```bash
+   git add .
+   git commit -m "Ready for deployment"
+   git push
+   ```
+
+2. **Deploy on Vercel**:
+   - Go to [vercel.com](https://vercel.com) and sign in with GitHub
+   - Click "Add New Project"
+   - Import your GitHub repository
+   - Vercel will auto-detect Vite settings
+   - Click "Deploy"
+   - Your site will be live in minutes!
+
+3. **Automatic Deployments**:
+   - Every push to your main branch will automatically deploy
+   - You'll get a unique URL like: `your-portfolio.vercel.app`
+
+### Alternative: Deploy via Vercel CLI
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy
+vercel
+```
+
 ## Technologies Used
 
 - React 18
